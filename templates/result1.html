@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Coral Health AI Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    overflow-y:auto;
+    background:linear-gradient(-45deg,#001219,#005f73,#0a9396,#94d2bd);
+    background-size:400% 400%;
+    animation:bgMove 12s ease infinite;
+    padding:25px;
+}
+
+/* BACKGROUND */
+
+@keyframes bgMove{
+
+    0%{
+        background-position:0% 50%;
+    }
+
+    50%{
+        background-position:100% 50%;
+    }
+
+    100%{
+        background-position:0% 50%;
+    }
+
+}
+
+/* BUBBLES */
+
+.bubble{
+    position:fixed;
+    bottom:-100px;
+    background:rgba(255,255,255,0.1);
+    border-radius:50%;
+    animation:float 15s linear infinite;
+}
+
+.bubble:nth-child(1){
+    width:60px;
+    height:60px;
+    left:10%;
+}
+
+.bubble:nth-child(2){
+    width:40px;
+    height:40px;
+    left:25%;
+    animation-duration:12s;
+}
+
+.bubble:nth-child(3){
+    width:80px;
+    height:80px;
+    left:50%;
+    animation-duration:18s;
+}
+
+.bubble:nth-child(4){
+    width:50px;
+    height:50px;
+    left:75%;
+    animation-duration:14s;
+}
+
+.bubble:nth-child(5){
+    width:70px;
+    height:70px;
+    left:90%;
+    animation-duration:16s;
+}
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+
+}
+
+/* MAIN */
+
+.main-container{
+
+    width:100%;
+    max-width:1450px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:0.9fr 1.1fr;
+
+    gap:22px;
+
+    position:relative;
+    z-index:2;
+}
+
+/* CARD */
+
+.card{
+
+    background:rgba(255,255,255,0.12);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:30px;
+
+    padding:22px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+
+    animation:fadeUp 1s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* LEFT SIDE */
+
+.left-side{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+/* RIGHT SIDE */
+
+.right-side{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+/* TITLE */
+
+.title{
+    color:white;
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+/* BOX */
+
+.box{
+
+    background:rgba(255,255,255,0.14);
+
+    border-radius:20px;
+
+    padding:18px;
+
+    transition:0.4s;
+}
+
+.box:hover{
+    transform:translateY(-5px);
+}
+
+.label{
+    color:#caf0f8;
+    font-size:15px;
+}
+
+.value{
+    color:white;
+    font-size:28px;
+    font-weight:700;
+    margin-top:8px;
+}
+
+.reason{
+    color:#f1f1f1;
+    line-height:1.7;
+    margin-top:8px;
+    font-size:14px;
+}
+
+/* COLORS */
+
+.health-good{
+    color:#00ff88;
+}
+
+.health-moderate{
+    color:#ffd166;
+}
+
+.health-poor{
+    color:#ff4d6d;
+}
+
+/* GRAPH */
+
+.graph-box{
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:20px;
+
+    height:300px;
+}
+
+/* REASON + SOLUTION */
+
+.bottom-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+}
+
+/* COMPARISON */
+
+.comparison-box{
+
+    background:rgba(255,255,255,0.14);
+
+    border-radius:20px;
+
+    padding:18px;
+}
+
+.compare-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:12px 0;
+
+    border-bottom:1px solid rgba(255,255,255,0.15);
+
+    color:white;
+}
+
+.compare-item:last-child{
+    border:none;
+}
+
+/* ACCURACY */
+
+.progress-bar{
+
+    width:100%;
+
+    height:16px;
+
+    background:rgba(255,255,255,0.2);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:12px;
+}
+
+.progress-fill{
+
+    height:100%;
+
+    background:linear-gradient(to right,#00ff88,#00b4d8);
+
+    border-radius:30px;
+
+    animation:loadBar 3s ease;
+}
+
+@keyframes loadBar{
+
+    from{
+        width:0;
+    }
+
+}
+
+.accuracy-text{
+    color:white;
+    margin-top:10px;
+    font-size:14px;
+}
+
+/* BUTTON */
+
+.predict-btn{
+
+    width:220px;
+
+    margin:25px auto 0;
+
+    display:block;
+
+    text-align:center;
+
+    padding:16px;
+
+    border-radius:18px;
+
+    background:linear-gradient(to right,#00e5ff,#00ff88);
+
+    color:#001219;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    transition:0.4s;
+}
+
+.predict-btn:hover{
+    transform:scale(1.05);
+}
+
+/* MOBILE */
+
+@media(max-width:950px){
+
+    .main-container{
+        grid-template-columns:1fr;
+    }
+
+    .bottom-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+
+<audio id="bgMusic" autoplay loop>
+    <source src="{{ url_for('static', filename='music/bgmusic.mp3') }}" type="audio/mp3">
+</audio>
+
+<script>
+
+window.onload = function(){
+
+    const music = document.getElementById("bgMusic");
+
+    music.play().catch(()=>{
+
+        document.addEventListener("click",()=>{
+
+            music.play();
+
+        },{once:true});
+
+    });
+
+}
+
+</script>
+
+<!-- bubbles -->
+
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+
+<!-- MAIN -->
+
+<div class="main-container">
+
+    <!-- LEFT SIDE -->
+
+    <div class="card left-side">
+
+        <div class="title">
+            🪸 Coral Dashboard
+        </div>
+
+        <!-- STATUS -->
+
+        <div class="box">
+
+            <div class="label">
+                Coral Health Status
+            </div>
+
+            <div class="value
+            {% if status == 'Healthy' %}
+            health-good
+            {% elif status == 'Moderate' %}
+            health-moderate
+            {% else %}
+            health-poor
+            {% endif %}
+            ">
+                {{ status }}
+            </div>
+
+        </div>
+
+        <!-- HEALTH SCORE -->
+
+        <div class="box">
+
+            <div class="label">
+                Coral Health Score
+            </div>
+
+            <div class="value">
+                {{ health_score }}%
+            </div>
+
+        </div>
+
+        <!-- DENSITY -->
+
+        <div class="box">
+
+            <div class="label">
+                Predicted Coral Density
+            </div>
+
+            <div class="value">
+                {{ predicted_density }}
+            </div>
+
+        </div>
+
+        <!-- ACCURACY -->
+
+        <div class="box">
+
+            <div class="label">
+                AI Prediction Accuracy
+            </div>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill"
+                style="width:{{ confidence }}%;">
+                </div>
+
+            </div>
+
+            <div class="accuracy-text">
+                {{ confidence }}% Model Confidence
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+
+    <div class="card right-side">
+
+        <!-- GRAPH -->
+
+        <div class="graph-box">
+
+            <canvas id="densityChart"></canvas>
+
+        </div>
+
+        <!-- REASON + SOLUTION -->
+
+        <div class="bottom-grid">
+
+            <!-- REASON -->
+
+            <div class="box">
+
+                <div class="label">
+                    Reasons
+                </div>
+
+                <div class="reason">
+                    {{ reason }}
+                </div>
+
+            </div>
+
+            <!-- SOLUTION -->
+
+            <div class="box">
+
+                <div class="label">
+                    Solutions
+                </div>
+
+                <div class="reason">
+                    {{ solution }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- COMPARISON -->
+
+        <div class="comparison-box">
+
+            <div class="label" style="margin-bottom:10px;">
+                Coral Health Comparison
+            </div>
+
+            <div class="compare-item">
+                <span>Previous Health</span>
+                <span>{{ previous_health }}%</span>
+            </div>
+
+            <div class="compare-item">
+                <span>Present Health</span>
+                <span>{{ present_health }}%</span>
+            </div>
+
+            <div class="compare-item">
+                <span>Future Prediction</span>
+                <span>{{ future_health }}%</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BUTTON -->
+
+<a href="/" class="predict-btn">
+
+    🔁 Predict Again
+
+</a>
+
+<!-- CHART -->
+
+<script>
+
+const richness = Number("{{ richness }}");
+const temp = Number("{{ temp }}");
+const density = Number("{{ predicted_density }}");
+
+const ctx = document.getElementById('densityChart');
+
+new Chart(ctx, {
+
+    type:'bar',
+
+    data:{
+
+        labels:[
+            'Species Richness',
+            'Temperature',
+            'Predicted Density'
+        ],
+
+        datasets:[{
+
+            label:'Coral Analysis',
+
+            data:[
+                richness,
+                temp,
+                density
+            ],
+
+            backgroundColor:[
+                '#00ff88',
+                '#ffd166',
+                '#00b4d8'
+            ],
+
+            borderRadius:12,
+            borderSkipped:false
+
+        }]
+    },
+
+    options:{
+
+        responsive:true,
+
+        maintainAspectRatio:false,
+
+        plugins:{
+            legend:{
+                labels:{
+                    color:'black'
+                }
+            }
+        },
+
+        scales:{
+            y:{
+                beginAtZero:true
+            }
+        },
+
+        animation:{
+            duration:2500
+        }
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

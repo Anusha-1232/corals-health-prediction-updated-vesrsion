@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Coral Health AI</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    margin:0;
+    padding:30px;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    overflow:auto;
+}
+
+/* 🌊 ONLY BACKGROUND MOVES */
+body::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+
+    background:url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=1920&auto=format&fit=crop')
+    no-repeat center center/cover;
+
+    animation:bgZoom 20s ease-in-out infinite alternate;
+
+    z-index:-2;
+}
+
+/* DARK OVERLAY STATIC */
+body::after{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,20,40,0.55);
+    z-index:-1;
+}
+
+@keyframes bgZoom{
+    from{ transform:scale(1); }
+    to{ transform:scale(1.1); }
+}
+
+/* ❌ IMPORTANT: NO ANIMATION ON CARDS */
+.card, .container, .box{
+    animation:none !important;
+    transform:none !important;
+}
+
+/* 🫧 bubbles */
+
+.bubble{
+    position:fixed;
+    bottom:-100px;
+    background:rgba(255,255,255,0.12);
+    border-radius:50%;
+    animation:float 15s linear infinite;
+}
+
+.bubble:nth-child(1){
+    width:60px;
+    height:60px;
+    left:10%;
+}
+
+.bubble:nth-child(2){
+    width:40px;
+    height:40px;
+    left:25%;
+    animation-duration:12s;
+}
+
+.bubble:nth-child(3){
+    width:80px;
+    height:80px;
+    left:50%;
+    animation-duration:18s;
+}
+
+.bubble:nth-child(4){
+    width:50px;
+    height:50px;
+    left:75%;
+    animation-duration:14s;
+}
+
+.bubble:nth-child(5){
+    width:70px;
+    height:70px;
+    left:90%;
+    animation-duration:16s;
+}
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+
+}
+
+/* MAIN CARD */
+
+.container{
+
+    width:90%;
+    max-width:950px;
+
+    padding:45px;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,0.12);
+
+    border:1px solid rgba(255,255,255,0.18);
+
+    backdrop-filter:blur(15px);
+
+    color:white;
+
+    text-align:center;
+
+    animation:fadeUp 1.5s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+h1{
+
+    font-size:48px;
+
+    margin-bottom:25px;
+
+    font-weight:700;
+}
+
+/* 🎤 Voice Box */
+
+.voice-box{
+
+    margin-top:15px;
+
+    padding:30px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,0.08);
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(10px);
+}
+
+/* TEXT */
+
+#voiceText{
+
+    color:#f1f1f1;
+
+    font-size:18px;
+
+    line-height:2.1;
+
+    text-align:justify;
+}
+
+/* ✨ Highlight Effect */
+
+.highlight{
+
+    color:#00ff88;
+
+    font-weight:700;
+
+    text-shadow:0 0 15px #00ff88;
+
+    transition:0.3s;
+}
+
+/* BUTTON */
+
+.start-btn{
+
+    display:inline-block;
+
+    margin-top:30px;
+
+    padding:16px 40px;
+
+    border-radius:18px;
+
+    background:linear-gradient(to right,#00e5ff,#00ff88);
+
+    color:#001219;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    font-size:18px;
+
+    transition:0.4s;
+}
+
+.start-btn:hover{
+
+    transform:scale(1.08);
+
+    box-shadow:0 0 20px rgba(0,255,136,0.5);
+}
+
+/* mobile */
+
+@media(max-width:700px){
+
+    h1{
+        font-size:34px;
+    }
+
+    #voiceText{
+        font-size:15px;
+    }
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- 🫧 bubbles -->
+
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+    <h1>Corals Health Prediction</h1>
+
+    <!-- 🎤 AI Text -->
+     
+    <div class="voice-box">
+
+        <p id="voiceText">
+        
+Welcome to Coral Health Prediction System.
+
+Coral reefs are underwater ecosystems found in seas and oceans.
+They are made up of tiny marine organisms called corals.
+
+Coral reefs are very important for the environment because:
+
+They support nearly 25 percent of marine life,
+even though they cover a very small part of the ocean.
+
+They act as natural barriers that protect coastal areas
+from strong waves, storms, and tsunamis.
+
+They also support fishing, tourism, and marine biodiversity.
+
+If coral reefs are not present,
+it can lead to serious problems such as:
+
+loss of marine species,
+coastal erosion,
+increase in storm damage,
+and imbalance in the ocean ecosystem.
+
+Due to climate change,
+rising ocean temperatures,
+and pollution,
+coral reefs are getting damaged rapidly.
+
+To understand and predict coral health,
+we developed this Machine Learning based system.
+
+In this project, we use a dataset containing:
+year,
+water temperature,
+species richness,
+and coral region.
+
+We use Machine Learning algorithms such as:
+Random Forest,
+Decision Tree,
+and Linear Regression.
+
+These models analyze coral data
+and predict coral health conditions.
+
+The system classifies coral health into:
+Healthy, Moderate, and Poor categories.
+
+It also predicts coral density,
+health score,
+and future reef condition.
+
+The main purpose of this project is to help
+marine conservation,
+environmental monitoring,
+and climate change studies.
+
+This system can help scientists and researchers
+to take better decisions to protect ocean life.
+
+Now click the button to check coral health prediction.
+            
+        </p>
+
+    </div>
+
+    <!-- BUTTON -->
+<a href="/input" class="start-btn">
+    Check Coral Health
+</a>
+</div>
+
+<!-- 🎤 AI VOICE + TEXT HIGHLIGHT -->
+<script>
+
+function startVoice(){
+
+    const el = document.getElementById("voiceText");
+    const text = el.innerText;
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.lang = "en-US";
+    speech.rate = 0.75;
+    speech.pitch = 1;
+
+    function loadVoices(){
+
+        let voices = speechSynthesis.getVoices();
+
+        if(!voices || voices.length === 0){
+            setTimeout(loadVoices, 200);
+            return;
+        }
+
+        speech.voice = voices[0];
+
+        speechSynthesis.cancel();   // ✅ stop old voice
+        speechSynthesis.speak(speech);
+    }
+
+    loadVoices();
+
+    // 👉 store reference
+    window.currentSpeech = speech;
+}
+
+/* ▶️ start voice once */
+window.addEventListener("click", () => {
+    startVoice();
+}, { once:true });
+
+/* 🛑 STOP VOICE WHEN BUTTON CLICKED */
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btn = document.querySelector("button[type='submit']");
+
+    if(btn){
+
+        btn.addEventListener("click", () => {
+
+            speechSynthesis.cancel();   // ✅ STOP VOICE
+
+        });
+
+    }
+
+});
+
+/* 🛑 STOP VOICE ON PAGE RELOAD / CLOSE */
+window.addEventListener("beforeunload", () => {
+
+    speechSynthesis.cancel();   // ✅ STOP VOICE
+
+});
+
+</script>
+
+
+</body>
+</html>
